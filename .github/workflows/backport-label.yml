@@ -1,0 +1,23 @@
+name: backport-label
+
+on:
+  pull_request:
+    branches: ["release/**"]
+    types: [opened, reopened, synchronize, labeled, unlabeled]
+
+permissions:
+  contents: read
+
+jobs:
+  backport-label:
+    name: backport-label
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require the backport or release-sync label
+        env:
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: |
+          case ",${LABELS}," in
+            *,backport,*|*,release-sync,*) echo "Label present: ${LABELS}" ;;
+            *) echo "::error::PRs to release branches need the 'backport' or 'release-sync' label"; exit 1 ;;
+          esac

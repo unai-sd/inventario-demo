@@ -1,0 +1,37 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Tag must point to a release branch
+        run: |
+          if ! git branch -r --contains "${GITHUB_SHA}" | grep -q 'origin/release/'; then
+            echo "::error::${GITHUB_REF_NAME} is not on a release/* branch"
+            exit 1
+          fi
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - run: go test ./...
+      - name: Build binaries
+        run: |
+          for arch in amd64 arm64; do
+            GOOS=linux GOARCH=$arch go build -ldflags "-X main.version=${GITHUB_REF_NAME}" \
+              -o "dist/inventario-api-linux-${arch}" ./cmd/api
+            GOOS=linux GOARCH=$arch go build -o "dist/inventario-migrate-linux-${arch}" ./cmd/migrate
+          done
+          ls -l dist/
+      - name: Simulated publish
+        run: echo "Would publish inventario-demo ${GITHUB_REF_NAME} binaries and deploy (simulated)."
