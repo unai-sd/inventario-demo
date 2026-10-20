@@ -23,6 +23,7 @@ type Store interface {
 	RecordMovement(ctx context.Context, m inventory.Movement) (inventory.Movement, int, error)
 	ListMovements(ctx context.Context, productID int64) ([]inventory.Movement, error)
 	StockLevels(ctx context.Context, warehouseID int64) ([]inventory.StockLevel, error)
+	LowStock(ctx context.Context) ([]inventory.LowStockItem, error)
 }
 
 type server struct {
@@ -43,6 +44,7 @@ func NewHandler(store Store, version string) http.Handler {
 	mux.HandleFunc("GET /movements", s.listMovements)
 	mux.HandleFunc("POST /movements", s.createMovement)
 	mux.HandleFunc("GET /stock", s.stockLevels)
+	mux.HandleFunc("GET /alerts/low-stock", s.lowStock)
 	return mux
 }
 
