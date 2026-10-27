@@ -9,7 +9,7 @@ de Go 1.22+) y PostgreSQL 16 mediante `pgx`. Sin framework web ni ORM.
 | --- | --- |
 | `cmd/api` | Arranque del servidor: lee `DATABASE_URL` y `PORT`, crea el pool y apaga con gracia. La versión se inyecta al compilar (`-ldflags "-X main.version=..."`). |
 | `cmd/migrate` | Aplica las migraciones pendientes y termina. |
-| `internal/inventory` | Modelo de dominio y reglas puras: validación, aplicación de movimientos. Sin dependencias de base de datos; probado con pruebas unitarias. |
+| `internal/inventory` | Modelo de dominio y reglas puras: validación, aplicación de movimientos, alertas. Sin dependencias de base de datos; probado con pruebas unitarias. |
 | `internal/store` | Repositorio PostgreSQL. Cada movimiento se aplica en una transacción que bloquea la fila de stock (`SELECT ... FOR UPDATE`). Probado con pruebas de integración (`-tags integration`). |
 | `internal/httpapi` | Manejadores HTTP. Dependen de la interfaz `Store`, así que se prueban con un almacén en memoria. |
 | `internal/migrate` | Carga `NNNN_nombre.sql`, los ordena y aplica los pendientes registrándolos en `schema_migrations`. |
@@ -58,6 +58,8 @@ erDiagram
 - `stock` guarda la cantidad actual (nunca negativa) por producto y almacén.
 - `movements` es el libro inmutable: `in` suma, `out` resta (falla si no hay bastante) y
   `adjust` fija la cantidad tras un recuento físico.
+- La vista `product_stock_totals` suma el stock de todos los almacenes; un producto genera
+  alerta cuando su total es menor o igual que `min_stock` (si `min_stock` es 0 no hay alerta).
 
 ## Migraciones
 

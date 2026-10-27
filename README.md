@@ -1,7 +1,7 @@
 # inventario-demo
 
 API de inventario de almacenes de la distribuidora ficticia **Distribuciones Demo**:
-productos, almacenes, movimientos de stock.
+productos, almacenes, movimientos de stock y alertas de stock bajo.
 
 ## Requisitos
 
@@ -46,6 +46,7 @@ de datos con datos que quieras conservar.
 | GET, POST | `/warehouses` | Listar y dar de alta almacenes |
 | GET, POST | `/movements` | Libro de movimientos (filtro `product_id`) y registrar entradas (`in`), salidas (`out`) o ajustes de inventario (`adjust`) |
 | GET | `/stock` | Stock por producto y almacén (filtro `warehouse_id`) |
+| GET | `/alerts/low-stock` | Productos con stock total igual o inferior a su mínimo |
 
 Ejemplo:
 
