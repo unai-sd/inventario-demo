@@ -47,6 +47,7 @@ de datos con datos que quieras conservar.
 | GET, POST | `/movements` | Libro de movimientos (filtro `product_id`) y registrar entradas (`in`), salidas (`out`) o ajustes de inventario (`adjust`) |
 | GET | `/stock` | Stock por producto y almacén (filtro `warehouse_id`) |
 | GET | `/alerts/low-stock` | Productos con stock total igual o inferior a su mínimo |
+| POST | `/transfers` | Traspaso de stock entre dos almacenes |
 
 Ejemplo:
 

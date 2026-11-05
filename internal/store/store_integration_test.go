@@ -36,7 +36,7 @@ func newTestStore(t *testing.T) *Store {
 	if _, err := migrate.Up(ctx, pool, all); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := pool.Exec(ctx, `TRUNCATE products, warehouses, stock, movements RESTART IDENTITY CASCADE`); err != nil {
+	if _, err := pool.Exec(ctx, `TRUNCATE products, warehouses, stock, movements, transfers RESTART IDENTITY CASCADE`); err != nil {
 		t.Fatal(err)
 	}
 	return New(pool)
