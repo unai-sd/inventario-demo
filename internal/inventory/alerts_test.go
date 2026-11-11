@@ -9,6 +9,7 @@ func TestIsLowStock(t *testing.T) {
 	}{
 		{0, 0, false},
 		{5, 10, true},
+		{10, 10, true},
 		{11, 10, false},
 	}
 	for _, tc := range cases {
